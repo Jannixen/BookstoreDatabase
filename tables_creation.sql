@@ -34,29 +34,36 @@ AS
 GO
 
 EXEC pr_rmv_table @table_name='returns_details'
+GO;
 EXEC pr_rmv_table @table_name='order_items'
+GO;
 EXEC pr_rmv_table @table_name='orders'
+GO;
 EXEC pr_rmv_table @table_name='clients'
-EXEC pr_rmv_table @table_name='storage'
+GO;
+EXEC pr_rmv_table @table_name='deliveries'
+GO;
 EXEC pr_rmv_table @table_name='books '
+GO;
 
 
 
 create table [dbo].books 
-(	isbn 	numeric(13) 	not null identity constraint pk_books primary key
-,	title 		varchar(100) 	not null
-,	author		varchar(50)		not null
-,	published_year		varchar(4)		not null
-,	descr		varchar(500)	not null
-,	publisher		varchar(50)		not null
+(	isbn 	numeric(13) 	not null constraint pk_books primary key
+,	title 		varchar(200) 	not null
+,	author		varchar(100)		not null
+,	published_year		varchar(4)		null
+,	descr		varchar(500)	null
+,	publisher		varchar(50)		null
 ,	price		money			not null
 ,	genre		varchar(50)
 )
 GO
 
-create table [dbo].storage
+create table [dbo].deliveries
 (	isbn	numeric(13) not null constraint fk_storage__books foreign key references books(isbn)
-,	storage_count	int	not null
+,	delivery_count	int	not null
+, 	delivery_date   datetime	not null
 )
 GO
 
@@ -64,7 +71,7 @@ create table [dbo].clients
 (	id_client int not null	identity constraint pk_clients primary key
 ,	name_client varchar(30) not null
 ,	surname_client varchar(30) not null
-,	client_email	varchar(40) not null
+,	client_email	varchar(40) not null UNIQUE
 ,	client_addres varchar(60)
 ,	client_phone	numeric(12)
 )
@@ -89,6 +96,7 @@ GO
 
 create table [dbo].returns_details
 (	id_order_item	int not null constraint fk_returns__order_items	 foreign key references	order_items(id_order_item)
-,	return_date		datetime	not null
+,	return_date		datetime	not null,
+	returned_item_count int not null,
 )
 GO
